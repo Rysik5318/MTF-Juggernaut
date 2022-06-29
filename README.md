@@ -21,11 +21,11 @@ mjug:
     Click on <b>[~]</b> for details!
   console_message: >2-
 
-    <color=#FFFFFF>You -</color> <color=#008C21>MTF Juggernaut</color><color=#FFFFFF>!</color> <color=#FFFFF>Elite Fighter</color> <color=#356FFF>Foundation</color><color=#FFFFFF>, you were sent to the complex.</color>
+    <color=#FFFFFF>You -</color> <color=#008C21>MTF Juggernaut</color><color=#FFFFFF>!</color> <color=#FFFFF>Elite Fighter</color> <color=#356FFF>Foundation</color><color=#FFFFFF>, you were sent to the facility.</color>
 
     <color=#FFFFFF>You are very slow.</color>
 
-    <color=#FFFFFF>You are playing for the MTF side.</color>
+    <color=#FFFFFF>You are playing on the mtf side.</color>
 
     <color=#FFFFFF>You have an increased health reserve.</color>
 
