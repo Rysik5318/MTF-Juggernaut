@@ -16,7 +16,7 @@ mjug:
   - KeycardNTFCommander
   spawn_role: NtfCaptain
   broadcast: >-
-    <size=60>You - <b><color=#008C21>MTF Juggernaut</color></b></size>
+    <size=60>You are - <b><color=#008C21>MTF Juggernaut</color></b></size>
 
     Click on <b>[~]</b> for details!
   console_message: >2-
