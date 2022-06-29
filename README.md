@@ -18,7 +18,7 @@ mjug:
   broadcast: >-
     <size=60>You - <b><color=#008C21>MTF Juggernaut</color></b></size>
 
-    Нажмите на <b>[~]</b> для подробностей!
+    Click on <b>[~]</b> for details!
   console_message: >2-
 
     <color=#FFFFFF>You -</color> <color=#008C21>MTF Juggernaut</color><color=#FFFFFF>!</color> <color=#FFFFF>Elite Fighter</color> <color=#356FFF>Foundation</color><color=#FFFFFF>, you were sent to the complex.</color>
