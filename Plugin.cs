@@ -18,7 +18,7 @@ namespace MtfJuggernaut
         public static Plugin plugin;
         public bool Known = false;
         public List<Player> Jplayers = new List<Player>();
-        public override Version Version { get; } = new Version(1, 1, 7);
+        public override Version Version { get; } = new Version(1, 1, 9);
         bool going = false;
         public override void OnEnabled()
         {
@@ -29,6 +29,13 @@ namespace MtfJuggernaut
             Exiled.Events.Handlers.Player.Died += OnPlayerDie;
             Exiled.Events.Handlers.Player.ChangingRole += OnPlayerForceclass;
             Exiled.Events.Handlers.Player.Left += OnPlayerLeave;
+            Exiled.Events.Handlers.Player.Hurting += OnPlayerHurt;
+        }
+
+        private void OnPlayerHurt(HurtingEventArgs ev)
+        {
+            if (Jplayers.Contains(ev.Target) && ev.Handler.Type == DamageType.Scp207 && Config.InvinsibleToColaDmg)
+                ev.IsAllowed = false;
         }
 
         private void OnPlayerDie(DiedEventArgs ev)
@@ -38,6 +45,7 @@ namespace MtfJuggernaut
                 Jplayers.Remove(ev.Target);
                 ev.Target.CustomInfo = "";
                 ev.Target.MaxHealth = 100;
+                ev.Target.DisableEffect<CustomPlayerEffects.Disabled>();
             }
         }
 
@@ -48,6 +56,7 @@ namespace MtfJuggernaut
                 Jplayers.Remove(ev.Player);
                 ev.Player.CustomInfo = "";
                 ev.Player.MaxHealth = 100;
+                ev.Player.DisableEffect<CustomPlayerEffects.Disabled>();
             }
         }
 
@@ -65,23 +74,6 @@ namespace MtfJuggernaut
             Jplayers.Clear();
         }
 
-        /*private void OnDecontamination(DecontaminatingEventArgs ev)
-        {
-            List<Player> spectators = (List<Player>)Player.List.Where(x => x.Role == RoleType.Spectator);
-            if (spectators.Count > 0)
-            {
-                Timing.CallDelayed(15f, () =>
-                {
-                    SpawnPlayer(spectators.RandomItem());
-                });
-            }
-            else
-            {
-                Timing.CallDelayed(15f, () => repeating());
-                Log.Debug($"В наблюдателях нет игроков, повторяем процедуру через 15 секунд!", Config.DebugMode);
-            }
-        }*/
-
         public override void OnDisabled()
         {
             plugin = null;
@@ -90,6 +82,7 @@ namespace MtfJuggernaut
             Exiled.Events.Handlers.Player.Died -= OnPlayerDie;
             Exiled.Events.Handlers.Player.ChangingRole -= OnPlayerForceclass;
             Exiled.Events.Handlers.Player.Left -= OnPlayerLeave;
+            Exiled.Events.Handlers.Player.Hurting -= OnPlayerHurt;
             base.OnDisabled();
         }
 
@@ -118,11 +111,11 @@ namespace MtfJuggernaut
             {
                 List<Player> spectators = new List<Player>();
                 foreach (Player player in Player.List)
-                    if (player.Role.Team == Team.RIP)
+                    if (player.Role.Team == Team.RIP && !player.ReferenceHub.serverRoles.OverwatchEnabled)
                         spectators.Add(player);
                 if (spectators.Count > 0)
                 {
-                    Log.Debug($"Найден спектатор!", Config.DebugMode);
+                    Log.Debug($"Free spectator found!", Config.DebugMode);
                     SpawnPlayer(spectators.RandomItem());
                     if (Player.List.Where(x => x.Role.Team == Team.SCP).Count() > 0)
                     {
@@ -136,13 +129,13 @@ namespace MtfJuggernaut
                 else
                 {
                     Timing.CallDelayed(10f, () => repeating());
-                    Log.Debug($"В наблюдателях нет игроков, повторяем процедуру через 10 секунд!", Config.DebugMode);
+                    Log.Debug($"There are no people in spectators, repeating in 30 seconds!", Config.DebugMode);
                 }
             }
             else
             {
-                Timing.CallDelayed(10f, () => repeating());
-                Log.Debug($"Время ещё не прошло, повторяем процедуру через 10 секунд!", Config.DebugMode);
+                Timing.CallDelayed(30f, () => repeating());
+                Log.Debug($"Time hasn't come yet, repeating in 30 seconds!", Config.DebugMode);
             }
         }
         public void SpawnPlayer(Player player)
@@ -169,7 +162,7 @@ namespace MtfJuggernaut
             player.Broadcast(10, Config.Broadcast, Broadcast.BroadcastFlags.Normal);
             player.SendConsoleMessage(Config.ConsoleMessage, "aqua");
             Jplayers.Add(player);
-            Log.Debug($"Игрок {player.Nickname} стал Джаггернаутом!", Config.DebugMode);
+            Log.Debug($"Player {player.Nickname} had became an MTF Juggernaut!", Config.DebugMode);
             Timing.CallDelayed(8f, () => player.Health = Config.Health);
             Timing.CallDelayed(8f, () => player.MaxHealth = (int)Config.Health);
         }

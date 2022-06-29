@@ -11,24 +11,24 @@ using System.Threading.Tasks;
 namespace MtfJuggernaut
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
-    class SpawnJug : ParentCommand
+    class SpawnJugC : ParentCommand
     {
-        public override string Command { get; } = "spawnjug";
+        public override string Command { get; } = "spawnjugc";
 
-        public override string[] Aliases { get; } = { "spawnjuggernaut", "spawnj" };
+        public override string[] Aliases { get; } = { "spawnjuggernautcassie", "spawnjc" };
 
-        public override string Description { get; } = "Spawns an MTF juggernaut";
+        public override string Description { get; } = "Spawns an MTF juggernaut with Cassie message.";
 
         public override void LoadGeneratedCommands()
         {
-            
+
         }
 
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("mjug.spawn"))
+            if (!sender.CheckPermission("mjugnc.spawn"))
             {
-                response = "You don't have permission. Required permission: mjug.spawn. Please reffer to the server admin if you think you should have this permission,";
+                response = "You don't have permission. Required permission: mjugnc.spawn. If you think you should get this permission, please write to the server admin.";
                 return false;
             }
 
@@ -38,11 +38,19 @@ namespace MtfJuggernaut
 
                 if (Plugin.plugin.Jplayers.Contains(sender1))
                 {
-                    response = $"Player {sender1.Nickname} is already an MTF Juggernaut!";
+                    response = $"Player {sender1.Nickname} is already a n MTF Juggernaut!";
                     return false;
                 }
 
                 Plugin.plugin.SpawnPlayer(sender1);
+                if (Player.List.Where(x => x.Role.Team == Team.SCP).Count() > 0)
+                {
+                    Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", $"AwaitingRecontainment {Player.List.Where(x => x.Role.Team == Team.SCP).Count()} ScpSubjects"), false, true, Plugin.plugin.Config.Subtitles));
+                }
+                else
+                {
+                    Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Plugin.plugin.Config.Subtitles));
+                }
                 Log.Debug($"Player {Player.Get(sender).Nickname} with {Player.Get(sender).CustomUserId} ID spawned themselves as an MTF Juggernaut.", Plugin.plugin.Config.DebugMode);
                 response = $"Player {sender1.Nickname} has became a Juggernaut!";
                 return true;
@@ -64,6 +72,14 @@ namespace MtfJuggernaut
             {
                 Plugin.plugin.SpawnPlayer(player);
                 Log.Debug($"Игрок {Player.Get(sender).Nickname} with {Player.Get(sender).CustomUserId} ID spawned {player.Nickname} as an MTF Juggernaut.", Plugin.plugin.Config.DebugMode);
+                if (Player.List.Where(x => x.Role.Team == Team.SCP).Count() > 0)
+                {
+                    Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", $"AwaitingRecontainment {Player.List.Where(x => x.Role.Team == Team.SCP).Count()} ScpSubjects"), false, true, Plugin.plugin.Config.Subtitles));
+                }
+                else
+                {
+                    Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Plugin.plugin.Config.Subtitles));
+                }
 
                 response = $"Player {player.Nickname} became an MTF Juggernaut!";
                 return true;
