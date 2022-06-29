@@ -14,16 +14,16 @@ namespace MtfJuggernaut
         public bool InvinsibleToColaDmg { get; set; } = true;
         public List<ItemType> SpawnItems { get; set; } = new List<ItemType>() { ItemType.ArmorHeavy, ItemType.GrenadeHE, ItemType.Adrenaline, ItemType.Medkit, ItemType.Radio, ItemType.GunE11SR, ItemType.KeycardNTFCommander };
         public RoleType SpawnRole { get; set; } = RoleType.NtfCaptain;
-        public string Broadcast { get; set; } = "<size=60>Вы - <b><color=#008C21>МОГ Джаггернаут</color></b></size>\nНажмите на <b>[~]</b> для подробностей!";
+        public string Broadcast { get; set; } = "<size=60>You are - <b><color=#008C21>MTF Juggernaut</color></b></size>\nClick on <b>[~]</b> for details!";
         public string ConsoleMessage { get; set; } =
     "\n" +
-    "<color=#FFFFFF>Вы -</color> <color=#008C21>МОГ Джаггернаут</color><color=#FFFFFF>!</color> <color=#FFFFF>Элитный боец</color> <color=#356FFF>Фонда</color><color=#FFFFFF>, вас отправили в комплекс.</color>\n" +
-    "<color=#FFFFFF>Вы очень замедлены.</color>\n" +
-    "<color=#FFFFFF>Вы играете за сторону MTF.</color>\n" +
-    "<color=#FFFFFF>У вас повышенный запас здоровья.</color>\n" +
-    "<color=#FFFFFF>Желаю приятной игры!</color>\n" +
-    "<color=#73C5FF>Если возникнут баги, пожалуйста, отпишитесь о них к нам в дискорд: Discord.GG/hGANQR5n3f :D </color>";
-        public string CustomInfo { get; set; } = "Джаггернаут МОГ";
+    "    <color=#FFFFFF>You -</color> <color=#008C21>MTF Juggernaut</color><color=#FFFFFF>!</color> <color=#FFFFF>Elite Fighter</color> <color=#356FFF>Foundation</color><color=#FFFFFF>, you were sent to the facility.</color>\n" +
+    "<color=#FFFFFF>You are very slow.</color>\n" +
+    "<color=#FFFFFF>You are playing on the MTF side.</color>\n" +
+    "<color=#FFFFFF>You have an increased health reserve.</color>\n" +
+    "<color=#FFFFFF>I wish you a pleasant game!</color>\n" +
+    "    <color=#73C5FF>If you encounter any bugs, please report them to us in discord: Discord.GG/hGANQR5n3f :D</color>";
+        public string CustomInfo { get; set; } = "Juggernaut MTF";
         public bool Subtitles { get; set; } = false;
         public string Cassie { get; set; } = "Heavy MtfUnit Designated NATO_F 7  HasEntered AllRemaining   . $scpstate";
         public float Health { get; set; } = 500;
