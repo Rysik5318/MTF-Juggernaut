@@ -1,6 +1,10 @@
 # MTF-Juggernaut
 MTF Juggernaut plugin for SCP SL
 
+# Description:
+After a specified amount of time, the elite fighter spawns in.
+It has slow speed, lots of HP, heavy armor and heavy guns.
+
 # Default config:
 ```yaml
 mjug:
