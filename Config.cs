@@ -35,7 +35,7 @@ namespace MtfJuggernaut
         [Description("↓Indicates whether subtitles will be used when playing cassie")]
         public bool Subtitles { get; set; } = false;
         [Description("↓Specifies which cassie will be played when the juggernaut appears")]
-        public string Cassie { get; set; } = "Heavy MtfUnit Designated NATO_F 7  HasEntered AllRemaining   . $scpstate";
+        public string Cassie { get; set; } = "Heavy MtfUnit Epsilon 11 Designated NATO_F 7  HasEntered AllRemaining   . $scpstate";
         [Description("↓Indicates the hp of the juggernaut")]
         public float Health { get; set; } = 500;
         [Description("↓Indicates which cartridges the juggernaut will receive when spawning")]
