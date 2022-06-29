@@ -13,7 +13,7 @@ namespace MtfJuggernaut
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     class SpawnJugNC : ParentCommand
     {
-        public override string Command { get; } = "spawnjugbc";
+        public override string Command { get; } = "spawnjugnc";
 
         public override string[] Aliases { get; } = { "spawnjuggernautnopecassie", "spawnjnc" };
 
