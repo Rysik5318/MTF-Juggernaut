@@ -25,13 +25,13 @@ mjug:
 
     <color=#FFFFFF>You are very slow.</color>
 
-    <color=#FFFFFF>You are playing on the mtf side.</color>
+    <color=#FFFFFF>You are playing on the MTF side.</color>
 
     <color=#FFFFFF>You have an increased health reserve.</color>
 
     <color=#FFFFFF>I wish you a pleasant game!</color>
 
-    <color=#73C5FF>If there are bugs, please report them to us in discord: Discord.GG/hGANQR5n3f :D</color>
+    <color=#73C5FF>If you encounter any bugs, please report them to us in discord: Discord.GG/hGANQR5n3f :D</color>
   custom_info: MTF Juggernaut
   subtitles: false
   cassie: Heavy MtfUnit Designated NATO_F 7  HasEntered AllRemaining   . $scpstate
