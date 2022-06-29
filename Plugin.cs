@@ -18,7 +18,7 @@ namespace MtfJuggernaut
         public static Plugin plugin;
         public bool Known = false;
         public List<Player> Jplayers = new List<Player>();
-        public override Version Version { get; } = new Version(1, 1, 9);
+        public override Version Version { get; } = new Version(1, 2, 0);
         bool going = false;
         public override void OnEnabled()
         {
@@ -111,7 +111,7 @@ namespace MtfJuggernaut
             {
                 List<Player> spectators = new List<Player>();
                 foreach (Player player in Player.List)
-                    if (player.Role.Team == Team.RIP && !player.ReferenceHub.serverRoles.OverwatchEnabled)
+                    if (player.Role.Team == Team.RIP && !player.IsOverwatchEnabled)
                         spectators.Add(player);
                 if (spectators.Count > 0)
                 {
