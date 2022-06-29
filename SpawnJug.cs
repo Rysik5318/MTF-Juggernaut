@@ -27,7 +27,7 @@ namespace MtfJuggernaut
         {
             if (!sender.CheckPermission("mjug.spawn"))
             {
-                response = "У вас нет разрешения. Нужное разрешение: mjug.spawn. Если вы считаете, что должны иметь это разрешение, пожалуйста, напишите Rysik5318#7967";
+                response = "You don't have permission. Required permission: mjugnc.spawn. If you think you should get this permission, please write to the server admin.";
                 return false;
             }
 
@@ -37,26 +37,26 @@ namespace MtfJuggernaut
 
                 if (Plugin.plugin.Jplayers.Contains(sender1))
                 {
-                    response = $"Игрок {sender1.Nickname} уже Джагернаут!";
+                    response = $"Player {sender1.Nickname} already a juggernaut!";
                     return false;
                 }
 
                 Plugin.plugin.SpawnPlayer(sender1);
                 Log.Debug($"Игрок {Player.Get(sender).Nickname} под ID {Player.Get(sender).CustomUserId} заспавнил самого себя за Джагернаута.", Plugin.plugin.Config.DebugMode);
-                response = $"Игрок {sender1.Nickname} стал Джаггернаутом!";
+                response = $"Player {sender1.Nickname} became a Juggernaut!";
                 return true;
             }
 
             Player player = Player.Get(arguments.At(0));
             if (player == null)
             {
-                response = "Данного игрока не существует. Требуется ID игрока либо его никнейм!";
+                response = "This player does not exist. The player's ID or nickname is required!";
                 return false;
             }
 
             if (Plugin.plugin.Jplayers.Contains(player))
             {
-                response = $"Игрок {player.Nickname} уже Джагернаут!";
+                response = $"Player {player.Nickname} already a juggernaut!";
                 return false;
             }
             else

@@ -13,11 +13,11 @@ namespace MtfJuggernaut
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     class SpawnJugNC : ParentCommand
     {
-        public override string Command { get; } = "spawnjug";
+        public override string Command { get; } = "spawnjugbc";
 
-        public override string[] Aliases { get; } = { "spawnjuggernaut", "spawnj" };
+        public override string[] Aliases { get; } = { "spawnjuggernautnopecassie", "spawnjnc" };
 
-        public override string Description { get; } = "Spawns an MTF juggernaut";
+        public override string Description { get; } = "Spawns an MTF juggernaut, but cassie doesn't play.";
 
         public override void LoadGeneratedCommands()
         {
@@ -28,7 +28,7 @@ namespace MtfJuggernaut
         {
             if (!sender.CheckPermission("mjugnc.spawn"))
             {
-                response = "У вас нет разрешения. Нужное разрешение: mjugnc.spawn. Если вы считаете, что должны иметь это разрешение, пожалуйста, напишите Rysik5318#7967";
+                response = "You don't have permission. Required permission: mjugnc.spawn. If you think you should get this permission, please write to the server admin.";
                 return false;
             }
 
@@ -38,7 +38,7 @@ namespace MtfJuggernaut
 
                 if (Plugin.plugin.Jplayers.Contains(sender1))
                 {
-                    response = $"Игрок {sender1.Nickname} уже Джагернаут!";
+                    response = $"Player {sender1.Nickname} already a juggernaut!";
                     return false;
                 }
 
@@ -52,20 +52,20 @@ namespace MtfJuggernaut
                     Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Plugin.plugin.Config.Subtitles));
                 }
                 Log.Debug($"Игрок {Player.Get(sender).Nickname} под ID {Player.Get(sender).CustomUserId} заспавнил самого себя за Джагернаута.", Plugin.plugin.Config.DebugMode);
-                response = $"Игрок {sender1.Nickname} стал Джаггернаутом!";
+                response = $"Player {sender1.Nickname} became a Juggernaut!";
                 return true;
             }
 
             Player player = Player.Get(arguments.At(0));
             if (player == null)
             {
-                response = "Данного игрока не существует. Требуется ID игрока либо его никнейм!";
+                response = "This player does not exist. The player's ID or nickname is required!";
                 return false;
             }
 
             if (Plugin.plugin.Jplayers.Contains(player))
             {
-                response = $"Игрок {player.Nickname} уже Джагернаут!";
+                response = $"Player {player.Nickname} already a juggernaut!";
                 return false;
             }
             else
@@ -81,7 +81,7 @@ namespace MtfJuggernaut
                     Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Plugin.plugin.Config.Subtitles));
                 }
 
-                response = $"Игрок {player.Nickname} стал Джаггернаутом!";
+                response = $"Player {player.Nickname} became a Juggernaut!";
                 return true;
             }
             response = "amogus";
