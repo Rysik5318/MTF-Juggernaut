@@ -19,6 +19,11 @@ namespace MtfJuggernaut
 
         public override string Description { get; } = "Spawns an MTF juggernaut with Cassie message.";
 
+        public override void LoadGeneratedCommands()
+        {
+
+        }
+
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("mjugnc.spawn"))
