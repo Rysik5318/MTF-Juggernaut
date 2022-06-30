@@ -66,10 +66,8 @@ namespace MtfJuggernaut
             else
             {
                 Plugin.plugin.SpawnPlayer(player);
-                Log.Debug($"Игрок {Player.Get(sender).Nickname} with {Player.Get(sender).CustomUserId} ID spawned {player.Nickname} as an MTF Juggernaut.", Plugin.plugin.Config.DebugMode);
-
                 ScpStateCassie(player);
-
+                Log.Debug($"Player {Player.Get(sender).Nickname} with {Player.Get(sender).CustomUserId} ID spawned {player.Nickname} as an MTF Juggernaut.", Plugin.plugin.Config.DebugMode);
                 response = $"Player {player.Nickname} became an MTF Juggernaut!";
                 return true;
             }
