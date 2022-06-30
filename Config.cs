@@ -23,8 +23,7 @@ namespace MtfJuggernaut
         public string Broadcast { get; set; } = "<size=60>You are - <b><color=#008C21>MTF Juggernaut</color></b></size>\nClick on <b>[~]</b> for details!";
         [Description("↓Specifies which message will be output to the console to the player")]
         public string ConsoleMessage { get; set; } =
-    "\n" +
-    "    <color=#FFFFFF>You -</color> <color=#008C21>MTF Juggernaut</color><color=#FFFFFF>!</color> <color=#FFFFF>Elite Fighter</color> <color=#356FFF>Foundation</color><color=#FFFFFF>, you were sent to the facility.</color>\n" +
+    "\n   <color=#FFFFFF>You -</color> <color=#008C21>MTF Juggernaut</color><color=#FFFFFF>!</color> <color=#FFFFF>Elite Fighter</color> <color=#356FFF>Foundation</color><color=#FFFFFF>, you were sent to the facility.</color>\n" +
     "<color=#FFFFFF>You are very slow.</color>\n" +
     "<color=#FFFFFF>You are playing on the MTF side.</color>\n" +
     "<color=#FFFFFF>You have an increased health reserve.</color>\n" +

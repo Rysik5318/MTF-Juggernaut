@@ -17,9 +17,13 @@ namespace MtfJuggernaut
         public override string Author => "moseechev and Rysik5318";
         public static Plugin plugin;
         public bool Known = false;
-        public List<Player> Jplayers = new List<Player>();
+        public HashSet<Player> MtfJuggernautPlayers = new HashSet<Player>();
+
+        /// <inheritdoc />
+        public override Version RequiredExiledVersion { get; } = new Version(5, 1, 3);
+
         public override Version Version { get; } = new Version(1, 2, 0);
-        bool going = false;
+        bool running = false;
         public override void OnEnabled()
         {
             plugin = this;
@@ -34,44 +38,40 @@ namespace MtfJuggernaut
 
         private void OnPlayerHurt(HurtingEventArgs ev)
         {
-            if (Jplayers.Contains(ev.Target) && ev.Handler.Type == DamageType.Scp207 && Config.InvinsibleToColaDmg)
+            if (MtfJuggernautPlayers.Contains(ev.Target) && ev.Handler.Type == DamageType.Scp207 && Config.InvinsibleToColaDmg)
                 ev.IsAllowed = false;
         }
 
         private void OnPlayerDie(DiedEventArgs ev)
         {
-            if (Jplayers.Contains(ev.Target))
+            RemovePlayerExtraEffects(ev.Target);
+        }
+
+        private void RemovePlayerExtraEffects(Player player)
+        {
+            if (MtfJuggernautPlayers.Contains(player))
             {
-                Jplayers.Remove(ev.Target);
-                ev.Target.CustomInfo = "";
-                ev.Target.MaxHealth = 100;
-                ev.Target.DisableEffect<CustomPlayerEffects.Disabled>();
+                MtfJuggernautPlayers.Remove(player);
+                player.CustomInfo = "";
+                player.MaxHealth = 100;
+                player.DisableEffect<CustomPlayerEffects.Disabled>();
             }
         }
 
         private void OnPlayerForceclass(ChangingRoleEventArgs ev)
         {
-            if (Jplayers.Contains(ev.Player))
-            {
-                Jplayers.Remove(ev.Player);
-                ev.Player.CustomInfo = "";
-                ev.Player.MaxHealth = 100;
-                ev.Player.DisableEffect<CustomPlayerEffects.Disabled>();
-            }
+            RemovePlayerExtraEffects(ev.Player);
         }
 
         private void OnPlayerLeave(LeftEventArgs ev)
         {
-            if (Jplayers.Contains(ev.Player))
-            {
-                Jplayers.Remove(ev.Player);
-            }
+            MtfJuggernautPlayers.Remove(ev.Player);
         }
 
         private void OnRoundEnding()
         {
-            going = false;
-            Jplayers.Clear();
+            running = false;
+            MtfJuggernautPlayers.Clear();
         }
 
         public override void OnDisabled()
@@ -88,83 +88,85 @@ namespace MtfJuggernaut
 
         private void OnRoundStart()
         {
-            Random rnd = new Random();
-            going = true;
-            repeating();
-            sus();
+            running = true;
+            processPlayersContinuously();
+            disablePlayersContinuously();
         }
-        private void sus()
+        private IEnumerator<float> disablePlayersContinuously()
         {
-            if (going)
+            while (running)
             {
-                foreach (Player player in Jplayers)
+                foreach (Player player in MtfJuggernautPlayers)
                 {
                     player.EnableEffect<CustomPlayerEffects.Disabled>(10f, false);
                 }
-                Timing.CallDelayed(9f, () => sus());
+                yield return Timing.WaitForSeconds(9);
             }
         }
 
-        void repeating()
+        private IEnumerator<float> processPlayersContinuously()
         {
-            if (Round.ElapsedTime.TotalSeconds >= Config.SpawnTime)
+            while (running)
             {
-                List<Player> spectators = new List<Player>();
-                foreach (Player player in Player.List)
-                    if (player.Role.Team == Team.RIP && !player.IsOverwatchEnabled)
-                        spectators.Add(player);
-                if (spectators.Count > 0)
+                if (Round.ElapsedTime.TotalSeconds >= Config.SpawnTime)
                 {
-                    Log.Debug($"Free spectator found!", Config.DebugMode);
-                    SpawnPlayer(spectators.RandomItem());
-                    if (Player.List.Where(x => x.Role.Team == Team.SCP).Count() > 0)
+                    List<Player> spectators = new List<Player>();
+                    foreach (Player player in Player.List)
+                        if (player.Role.Team == Team.RIP && !player.IsOverwatchEnabled)
+                            spectators.Add(player);
+                    if (spectators.Count > 0)
                     {
-                        Timing.CallDelayed(3f, () => Cassie.Message(Config.Cassie.Replace("$scpstate", $"AwaitingRecontainment {Player.List.Where(x => x.Role.Team == Team.SCP).Count()} ScpSubjects"), false, true, Config.Subtitles));
+                        Log.Debug($"Free spectator found!", Config.DebugMode);
+                        SpawnPlayer(spectators.RandomItem());
+                        if (Player.List.Where(x => x.Role.Team == Team.SCP).Count() > 0)
+                        {
+                            Timing.CallDelayed(3f, () => Cassie.Message(Config.Cassie.Replace("$scpstate", $"AwaitingRecontainment {Player.List.Where(x => x.Role.Team == Team.SCP).Count()} ScpSubjects"), false, true, Config.Subtitles));
+                        }
+                        else
+                        {
+                            Timing.CallDelayed(3f, () => Cassie.Message(Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Config.Subtitles));
+                        }
                     }
                     else
                     {
-                        Timing.CallDelayed(3f, () => Cassie.Message(Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Config.Subtitles));
+                        Log.Debug($"There are no people in spectators, repeating in 30 seconds!", Config.DebugMode);
                     }
+                    yield return Timing.WaitForSeconds(10);
                 }
                 else
                 {
-                    Timing.CallDelayed(10f, () => repeating());
-                    Log.Debug($"There are no people in spectators, repeating in 30 seconds!", Config.DebugMode);
+                    yield return Timing.WaitForSeconds(30);
+                    Log.Debug($"Time hasn't come yet, repeating in 30 seconds!", Config.DebugMode);
                 }
-            }
-            else
-            {
-                Timing.CallDelayed(30f, () => repeating());
-                Log.Debug($"Time hasn't come yet, repeating in 30 seconds!", Config.DebugMode);
             }
         }
         public void SpawnPlayer(Player player)
         {
             player.SetRole(Config.SpawnRole);
             player.ClearInventory();
-            Timing.CallDelayed(1f, () => {
-                foreach (ItemType item in Config.SpawnItems)
-                {
-                    player.AddItem(item);
-                }
-            });
-            Timing.CallDelayed(2f, () => {
-                foreach (KeyValuePair<AmmoType, ushort> entry in Config.SpawnAmmo)
-                {
-                    Timing.CallDelayed(0.1f, () => player.SetAmmo(entry.Key, entry.Value));
-                }
-            });
-            player.UnitName = Config.UnitName;
             player.UnitName = Config.UnitName;
             player.Health = Config.Health;
             player.MaxHealth = (int)Config.Health;
             player.CustomInfo = Config.CustomInfo;
             player.Broadcast(10, Config.Broadcast, Broadcast.BroadcastFlags.Normal);
             player.SendConsoleMessage(Config.ConsoleMessage, "aqua");
-            Jplayers.Add(player);
-            Log.Debug($"Player {player.Nickname} had became an MTF Juggernaut!", Config.DebugMode);
-            Timing.CallDelayed(8f, () => player.Health = Config.Health);
-            Timing.CallDelayed(8f, () => player.MaxHealth = (int)Config.Health);
+
+            MtfJuggernautPlayers.Add(player);
+
+            Timing.CallDelayed(1f, () => {
+                foreach (ItemType item in Config.SpawnItems)
+                {
+                    player.AddItem(item);
+                }
+                foreach (KeyValuePair<AmmoType, ushort> entry in Config.SpawnAmmo)
+                {
+                    Timing.CallDelayed(0.1f, () => player.SetAmmo(entry.Key, entry.Value));
+                }
+                player.Health = Config.Health;
+                player.MaxHealth = (int)Config.Health;
+                Log.Debug($"Player {player.Nickname} had became an MTF Juggernaut!", Config.DebugMode);
+            });
+            
         }
     }
 }

@@ -19,11 +19,6 @@ namespace MtfJuggernaut
 
         public override string Description { get; } = "Spawns an MTF juggernaut with Cassie message.";
 
-        public override void LoadGeneratedCommands()
-        {
-
-        }
-
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             if (!sender.CheckPermission("mjugnc.spawn"))
@@ -34,25 +29,20 @@ namespace MtfJuggernaut
 
             if (arguments.Count == 0)
             {
-                Player sender1 = Player.Get(sender);
+                Player currentPlayer = Player.Get(sender);
 
-                if (Plugin.plugin.Jplayers.Contains(sender1))
+                if (Plugin.plugin.MtfJuggernautPlayers.Contains(currentPlayer))
                 {
-                    response = $"Player {sender1.Nickname} is already a n MTF Juggernaut!";
+                    response = $"Player {currentPlayer.Nickname} is already a n MTF Juggernaut!";
                     return false;
                 }
 
-                Plugin.plugin.SpawnPlayer(sender1);
-                if (Player.List.Where(x => x.Role.Team == Team.SCP).Count() > 0)
-                {
-                    Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", $"AwaitingRecontainment {Player.List.Where(x => x.Role.Team == Team.SCP).Count()} ScpSubjects"), false, true, Plugin.plugin.Config.Subtitles));
-                }
-                else
-                {
-                    Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Plugin.plugin.Config.Subtitles));
-                }
+                Plugin.plugin.SpawnPlayer(currentPlayer);
+
+                ScpStateCassie(currentPlayer);
+
                 Log.Debug($"Player {Player.Get(sender).Nickname} with {Player.Get(sender).CustomUserId} ID spawned themselves as an MTF Juggernaut.", Plugin.plugin.Config.DebugMode);
-                response = $"Player {sender1.Nickname} has became a Juggernaut!";
+                response = $"Player {currentPlayer.Nickname} has became a Juggernaut!";
                 return true;
             }
 
@@ -63,7 +53,7 @@ namespace MtfJuggernaut
                 return false;
             }
 
-            if (Plugin.plugin.Jplayers.Contains(player))
+            if (Plugin.plugin.MtfJuggernautPlayers.Contains(player))
             {
                 response = $"Player {player.Nickname} is already an MTF Juggernaut!";
                 return false;
@@ -72,20 +62,24 @@ namespace MtfJuggernaut
             {
                 Plugin.plugin.SpawnPlayer(player);
                 Log.Debug($"Игрок {Player.Get(sender).Nickname} with {Player.Get(sender).CustomUserId} ID spawned {player.Nickname} as an MTF Juggernaut.", Plugin.plugin.Config.DebugMode);
-                if (Player.List.Where(x => x.Role.Team == Team.SCP).Count() > 0)
-                {
-                    Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", $"AwaitingRecontainment {Player.List.Where(x => x.Role.Team == Team.SCP).Count()} ScpSubjects"), false, true, Plugin.plugin.Config.Subtitles));
-                }
-                else
-                {
-                    Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Plugin.plugin.Config.Subtitles));
-                }
+
+                ScpStateCassie(player);
 
                 response = $"Player {player.Nickname} became an MTF Juggernaut!";
                 return true;
             }
-            response = "amogus";
-            return true;
+        }
+
+        public void ScpStateCassie(Player player){
+            int scpPlayers = Player.List.Count(x => x.Role.Team == Team.SCP);
+            if (scpPlayers > 0)
+            {
+                Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", $"AwaitingRecontainment {scpPlayers} ScpSubjects"), false, true, Plugin.plugin.Config.Subtitles));
+            }
+            else
+            {
+                Timing.CallDelayed(3f, () => Cassie.Message(Plugin.plugin.Config.Cassie.Replace("$scpstate", "NoSCPsLeft"), false, true, Plugin.plugin.Config.Subtitles));
+            }
         }
     }
 }

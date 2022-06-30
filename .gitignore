@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/MTF-Juggernaut/v17/.suo
+/.vs/MtfJuggernaut/v17/.suo
+/.vs/ProjectSettings.json
+/.vs/slnx.sqlite
+/bin/Debug
+/obj
